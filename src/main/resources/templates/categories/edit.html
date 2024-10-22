@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="card border border-slate-300 rounded-md">
+            <div class="card-header p-3">
+                <h1>Create Product</h1>
+            </div>
+            <div class="manger__body p-3 border-y border-slate-300">
+                <form th:action="@{'/categories/edit/' + ${categoryDTO.id}}" method="post"
+                    class="flex flex-wrap justify-between" th:object="${categoryDTO}">
+                    <div class="form-group mb-3 w-1/2 me-1">
+                        <label for="name" class="block mb-2">Name</label>
+                        <input type="text" id="name" name="name" class="w-full p-2 border border-slate-300 rounded-md"
+                            th:field="*{name}">
+                    </div>
+                    <div class="form-group mb-3 w-1/2 ms-1">
+                        <label for="description" class="block mb-2">Description</label>
+                        <input type="text" id="description" name="description"
+                            class="w-full p-2 border border-slate-300 rounded-md" th:field="*{description}"></input>
+                    </div>
+                    <div class="form-group mb-3 w-full flex justify-end gap-2">
+                        <a th:href="@{/categories}" class="p-2 px-4 bg-red-500 text-white rounded-full">Cancel</a>
+                        <button type="reset" class="p-2 px-4 bg-yellow-500 text-white rounded-full">Reset</button>
+                        <button type="submit" class="p-2 px-4 bg-green-500 text-white rounded-full">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="card border border-slate-300 rounded-md">
+            <div class="card-header p-3">
+                <h1>Product Management</h1>
+            </div>
+            <form action="@{/categories}" method="get">
+                <div class="card__body p-3 border-y border-slate-300">
+                    <div class="form-group mb-3 w-full">
+                        <label for="">Keyword</label>
+                        <input type="text" name="keyword" id="keyword" placeholder="Search by keyword"
+                            class="w-full p-2 border border-slate-300 rounded-md">
+                    </div>
+                </div>
+                <div class="card__footer p-3 flex justify-between">
+                    <a th:href="@{/categories/create}" class="p-2 px-4 bg-green-500 text-white rounded-full">Create</a>
+                    <button type="submit" class="p-2 px-4 bg-blue-500 text-white rounded-full">Search</button>
+                </div>
+            </form>
+            <div class="manger__body p-3 border-y border-slate-300">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr class="*:p-2 *:text-left">
+                            <th class="border border-slate-300">ID</th>
+                            <th class="border border-slate-300"> <a
+                                    th:href="@{/categories(keyword=${keyword}, sortBy=${sortBy}, order=${order == 'asc' ? 'desc' : 'asc'}, page=${page}, size=${pageSize})}"
+                                    class="text-blue-500 flex items-center gap-1">
+                                    Name
+                                    <i
+                                        th:class="${sortBy == 'name' and order == 'asc' ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid  fa-arrow-up-wide-short'}"></i>
+                                </a></th>
+                            <th class="border border-slate-300">Description</th>
+                            <th class="border border-slate-300">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="category: ${categories}" class="*:p-2 *:text-left">
+                            <td th:text="${category.id}" class="border border-slate-300"></td>
+                            <td th:text="${category.name}" class="border border-slate-300"></td>
+                            <td th:text="${category.description}" class="border border-slate-300"></td>
+                            <td class="border border-slate-300 flex justify-center gap-3">
+                                <a th:href="@{'/categories/edit/' + ${category.id}}" class="btn btn-primary">
+                                    <i class="fa-solid fa-edit text-blue-500"></i>
+                                </a>
+                                <a th:href="@{'/categories/delete/' + ${category.id}}" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash text-red-500"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer pagination p-2 flex justify-between items-center">
+                <div class="page-size">
+                    <label for="pageSize" class="text-lg font-small text-gray-700">Page Size:</label>
+                    <select name="pageSize" id="pageSize" class="px-2 border border-slate-400 rounded-lg"
+                        onchange="window.location.href = '/categories?keyword=' + document.getElementById('keyword').value + '&page=0&size=' + this.value">
+                        <option class="bg-gray-300" th:each="size : ${pageSizes}" th:value="${size}" th:text="${size}"
+                            th:selected="${size == pageSize}"></option>
+                    </select>
+                </div>
+                <ul class="page-menu flex justify-center items-center gap-2">
+                    <li class="page-item">
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="0 == ${page} ? 'pointer-events-none !bg-slate-200 text-slate-400' : ''"
+                            th:href="@{/categories(keyword=${keyword}, sortBy=${sortBy}, order=${order}, page=0, size=${pageSize})}">
+                            <i class="fa-solid fa-angle-double-left"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1 < 0 ? 0: totalPages -1)}">
+                        <!-- Page i and size 2 -->
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="${i} == ${page} ? '!bg-blue-500 text-white' : ''"
+                            th:href="@{/categories(keyword=${keyword}, sortBy=${sortBy}, order=${order}, page=${i}, size=${pageSize})}"
+                            th:text="${i} + 1"></a>
+                    </li>
+
+                    <li class="page-item">
+                        <a class="w-8 h-8 flex justify-center items-center block page-link p-2 bg-slate-300 hover:bg-blue-500 hover:text-white rounded-full cursor-pointer"
+                            th:classappend="${totalPages - 1} == ${page} ? 'pointer-events-none !bg-slate-200 text-slate-400' : ''"
+                            th:href="@{/categories(keyword=${keyword},sortBy=${sortBy}, order=${order}, page=${totalPages - 1}, size=${pageSize})}">
+                            <i class="fa-solid fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="page-info">
+                    <span th:text="${page*pageSize + 1}"></span>
+                    <i class="fa-solid fa-minus"></i>
+                    <span th:text="${(page+1) *pageSize > totalElements ? totalElements : (page+1) *pageSize}"></span>
+                    of
+                    <span th:text="${totalElements}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

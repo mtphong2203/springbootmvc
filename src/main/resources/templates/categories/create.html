@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <div class="card border border-slate-300 rounded-md">
+            <div class="card-header p-3">
+                <h1>Create Product</h1>
+            </div>
+            <div class="manger__body p-3 border-y border-slate-300">
+                <form th:action="@{/categories/create}" method="post" th:object="${categoryDTO}"
+                    class="flex flex-wrap justify-between">
+                    <div class="form-group mb-3 w-1/2 me-1">
+                        <label for="name" class="block mb-2">Name</label>
+                        <input type="text" id="name" name="name" class="w-full p-2 border border-slate-300 rounded-md">
+                        <span class="text-red-400" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                    </div>
+
+                    <div class="form-group mb-3 w-1/2 ms-1">
+                        <label for="description" class="block mb-2">Description</label>
+                        <textarea type="text" id="editor" name="description"
+                            class="w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        <span class="text-red-400" th:if="${#fields.hasErrors('description')}"
+                            th:errors="*{description}"></span>
+                    </div>
+                    <div class="form-group mb-3 w-full flex justify-end gap-2">
+                        <a th:href="@{/categories}" class="p-2 px-4 bg-red-500 text-white rounded-full">Cancel</a>
+                        <button type="reset" class="p-2 px-4 bg-yellow-500 text-white rounded-full">Reset</button>
+                        <button type="submit" class="p-2 px-4 bg-green-500 text-white rounded-full">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <style>
+            .ck-editor__editable {
+                min-height: 500px;
+            }
+        </style>
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.2.0/ckeditor5.js",
+                    "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.2.0/"
+                }
+            }
+        </script>
+        <script type="module">
+            import {
+                ClassicEditor,
+                Essentials,
+                Bold,
+                Italic,
+                Font,
+                Paragraph,
+                Table, TableToolbar,
+                Heading,
+                HeadingButtonsUI, ParagraphButtonUI,
+                SourceEditing
+            } from 'ckeditor5';
+
+            ClassicEditor
+                .create(document.querySelector('#editor'), {
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    plugins: [Essentials, Bold, Italic, Font, Paragraph, Table, TableToolbar, Heading, SourceEditing],
+                    toolbar: {
+                        items: [
+                            'undo', 'redo', '|', 'bold', 'italic', '|',
+                            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'insertTable', 'heading', 'SourceEditing'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    table: {
+                        defaultHeadings: { rows: 1, columns: 1 }
+                    }
+                })
+                .then( /* ... */)
+                .catch( /* ... */);
+        </script>
+    </section>
+</body>
+
+</html>
